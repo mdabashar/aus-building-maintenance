@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+/* Brand tokens sampled from the company logo and business card:
+   orange gear + black house/hammer on white, heavy condensed headings. */
+@theme {
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb9e3c;
+  --color-brand-500: #f5921e;
+  --color-brand-600: #d97a0c;
+  --color-brand-700: #b45c09;
+  --color-brand-800: #92490f;
+  --color-brand-900: #783d10;
+
+  --color-ink-50: #f6f6f6;
+  --color-ink-100: #e7e7e7;
+  --color-ink-200: #d1d1d1;
+  --color-ink-300: #b0b0b0;
+  --color-ink-400: #888888;
+  --color-ink-500: #6d6d6d;
+  --color-ink-600: #5d5d5d;
+  --color-ink-700: #4f4f4f;
+  --color-ink-800: #1f1f1f;
+  --color-ink-900: #141414;
+  --color-ink-950: #0a0a0a;
+
+  --font-display: 'Anton', 'Arial Narrow', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink-900);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Anton has no real weight range — letter-spacing keeps it from looking cramped. */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* Visible focus ring for keyboard users on the dark header and orange buttons. */
+:focus-visible {
+  outline: 3px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Leaves room for the sticky mobile call bar so it never covers the footer. */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 4.25rem;
+  }
+}

@@ -1,0 +1,39 @@
+---
+import { site } from '../data/site';
+import { href } from '../lib/url';
+
+interface Props {
+  heading?: string;
+  body?: string;
+}
+
+const {
+  heading = 'Ready to get started?',
+  body = 'Free quotes, no obligation. Call or send through a few details and we will get back to you.',
+} = Astro.props;
+---
+
+<section class="bg-ink-950">
+  <div
+    class="mx-auto flex max-w-7xl flex-col items-center gap-6 px-4 py-14 text-center md:flex-row md:justify-between md:text-left"
+  >
+    <div>
+      <h2 class="font-display text-2xl text-white sm:text-3xl">{heading}</h2>
+      <p class="mt-2 max-w-xl text-ink-200">{body}</p>
+    </div>
+    <div class="flex flex-shrink-0 flex-col gap-3 sm:flex-row">
+      <a
+        href={site.phoneHref}
+        class="rounded bg-brand-500 px-7 py-3.5 text-center font-bold text-ink-950 transition hover:bg-brand-400"
+      >
+        Call {site.phoneDisplay}
+      </a>
+      <a
+        href={href('/quote')}
+        class="rounded border-2 border-white/30 px-7 py-3.5 text-center font-bold text-white transition hover:border-brand-500 hover:text-brand-400"
+      >
+        Request a Quote
+      </a>
+    </div>
+  </div>
+</section>

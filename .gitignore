@@ -1,0 +1,22 @@
+# build output
+site/dist/
+site/.astro/
+
+# dependencies
+node_modules/
+
+# logs
+*.log
+npm-debug.log*
+
+# environment
+.env
+.env.production
+
+# local tooling — launch.json holds a machine-specific path to node.exe
+.claude/
+
+# editor / OS
+.DS_Store
+Thumbs.db
+desktop.ini

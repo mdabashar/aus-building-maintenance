@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Update the host once the real domain is live.
+Sitemap: https://www.ausbuildingmaintenance.com.au/sitemap-index.xml

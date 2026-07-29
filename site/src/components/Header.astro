@@ -1,0 +1,155 @@
+---
+import { site, nav } from '../data/site';
+import { href } from '../lib/url';
+
+// Astro.url.pathname includes the configured base, so compare against the
+// base-prefixed href rather than the raw path.
+const path = Astro.url.pathname;
+const isActive = (target: string) => {
+  const full = href(target);
+  return target === '/'
+    ? path === full || path === `${full}/`
+    : path.startsWith(full);
+};
+---
+
+<header class="sticky top-0 z-40 bg-ink-950 text-white shadow-lg">
+  <!-- Utility strip: the phone number is the whole point of this site, so it
+       sits above the fold on every page, on every breakpoint. -->
+  <div class="hidden border-b border-white/10 bg-black/40 md:block">
+    <div
+      class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-sm"
+    >
+      <p class="text-ink-200">
+        Licence No. {site.licenceNumber} &nbsp;·&nbsp; Servicing Logan &amp; Brisbane
+        southside
+      </p>
+      <div class="flex items-center gap-5">
+        <a
+          href={`mailto:${site.email}`}
+          class="text-ink-200 transition hover:text-brand-400">{site.email}</a
+        >
+        <a
+          href={site.phoneHref}
+          class="font-semibold text-brand-400 transition hover:text-brand-300"
+          >{site.phoneDisplay}</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+    <a
+      href={href('/')}
+      class="flex items-center gap-3"
+      aria-label={`${site.name} home`}
+    >
+      <img
+        src={href('/images/logo.jpg')}
+        alt=""
+        width="52"
+        height="52"
+        class="h-13 w-13 rounded-full object-cover"
+      />
+      <span class="leading-tight">
+        <span class="font-display block text-lg text-white sm:text-xl"
+          >AUS Building</span
+        >
+        <span class="block text-[0.7rem] tracking-widest text-brand-400"
+          >&amp; MAINTENANCE SERVICE</span
+        >
+      </span>
+    </a>
+
+    <nav aria-label="Main" class="hidden items-center gap-1 lg:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={href(item.href)}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class:list={[
+              'rounded px-3 py-2 text-sm font-semibold transition hover:text-brand-400',
+              isActive(item.href) ? 'text-brand-400' : 'text-white',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href={href('/quote')}
+        class="ml-3 rounded bg-brand-500 px-5 py-2.5 text-sm font-bold text-ink-950 transition hover:bg-brand-400"
+      >
+        Get a Free Quote
+      </a>
+    </nav>
+
+    <button
+      type="button"
+      id="nav-toggle"
+      aria-controls="mobile-nav"
+      aria-expanded="false"
+      class="rounded p-2 text-white lg:hidden"
+    >
+      <span class="sr-only">Toggle navigation</span>
+      <svg
+        class="h-7 w-7"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-nav"
+    aria-label="Mobile"
+    hidden
+    class="border-t border-white/10 bg-ink-950 lg:hidden"
+  >
+    <ul class="mx-auto max-w-7xl px-4 py-2">
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={href(item.href)}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'block border-b border-white/5 py-3 font-semibold',
+                isActive(item.href) ? 'text-brand-400' : 'text-white',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="py-3">
+        <a
+          href={href('/quote')}
+          class="block rounded bg-brand-500 px-5 py-3 text-center font-bold text-ink-950"
+        >
+          Get a Free Quote
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    if (panel) panel.hidden = open;
+  });
+</script>

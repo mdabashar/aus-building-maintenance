@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { services } from '../../data/services';
+import { site } from '../../data/site';
+import { href, absoluteUrl } from '../../lib/url';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Building and maintenance services',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.name,
+    url: absoluteUrl(`/services/${s.slug}`, Astro.site),
+  })),
+};
+---
+
+<BaseLayout
+  title="Our Services"
+  description="Building, renovation and maintenance services in Kingston, Logan and the Brisbane southside — carpentry, decking, patios, landscaping, fencing, retaining walls, bathrooms, kitchens, flooring, tiling, painting and extensions."
+  schema={schema}
+>
+  <section class="bg-ink-950 py-14 sm:py-20">
+    <div class="mx-auto max-w-7xl px-4">
+      <nav aria-label="Breadcrumb" class="mb-4 text-sm text-ink-400">
+        <a href={href('/')} class="hover:text-brand-400">Home</a>
+        <span class="mx-2">/</span>
+        <span class="text-ink-200">Services</span>
+      </nav>
+      <h1 class="font-display text-4xl text-white sm:text-5xl">Our services</h1>
+      <p class="mt-4 max-w-2xl text-lg text-ink-200">
+        Twelve trades under one licence, servicing Kingston, Logan and the
+        Brisbane southside. Every job starts with a free on-site quote.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((service) => <ServiceCard service={service} />)}
+    </div>
+
+    <div class="mt-14 rounded-lg border border-ink-200 bg-ink-50 p-8 text-center">
+      <h2 class="font-display text-2xl text-ink-950">
+        Don't see what you need?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-ink-600">
+        This list covers the work we do most, but it is not exhaustive. If it
+        involves building or maintaining your property, call
+        <a
+          href={site.phoneHref}
+          class="font-semibold text-brand-600 hover:underline">{site.phoneDisplay}</a
+        > and ask.
+      </p>
+    </div>
+  </section>
+
+  <CTABand />
+</BaseLayout>

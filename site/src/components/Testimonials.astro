@@ -1,0 +1,51 @@
+---
+import { testimonials } from '../data/site';
+
+const isPlaceholder = testimonials.some((t) => t.quote.startsWith('PLACEHOLDER'));
+---
+
+<section class="bg-ink-50 py-16 sm:py-20">
+  <div class="mx-auto max-w-7xl px-4">
+    <div class="mb-10 text-center">
+      <p class="font-semibold tracking-widest text-brand-600 uppercase">
+        Testimonials
+      </p>
+      <h2 class="font-display mt-2 text-3xl text-ink-950 sm:text-4xl">
+        What our customers say
+      </h2>
+    </div>
+
+    {
+      isPlaceholder && (
+        <p class="mx-auto mb-8 max-w-2xl rounded border-2 border-dashed border-brand-400 bg-brand-50 p-3 text-center text-sm text-brand-900">
+          <strong>Placeholder content.</strong> Replace these with real customer
+          reviews in <code class="font-mono">src/data/site.ts</code> before
+          launch.
+        </p>
+      )
+    }
+
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        testimonials.map((t) => (
+          <figure class="flex flex-col rounded-lg bg-white p-6 shadow-sm">
+            <div class="mb-3 flex gap-0.5 text-brand-500" aria-label="5 out of 5 stars">
+              {[0, 1, 2, 3, 4].map(() => (
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" />
+                </svg>
+              ))}
+            </div>
+            <blockquote class="flex-1 text-ink-700 italic">"{t.quote}"</blockquote>
+            <figcaption class="mt-4 border-t border-ink-100 pt-4 text-sm">
+              <span class="font-bold text-ink-950">{t.name}</span>
+              <span class="block text-ink-500">
+                {t.suburb} · {t.service}
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

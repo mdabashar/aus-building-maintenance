@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets you re-deploy by hand from the Actions tab without pushing a commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once, but let a queued one finish rather than
+# cancelling it — a cancelled deploy can leave the site half-updated.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Defaults target the GitHub Pages project URL
+      # (https://<owner>.github.io/<repo>/).
+      #
+      # For a custom domain, set repository variables SITE_URL and SITE_BASE
+      # under Settings → Secrets and variables → Actions → Variables:
+      #   SITE_URL  = https://www.yourdomain.com.au
+      #   SITE_BASE = /
+      SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
+      SITE_BASE: ${{ vars.SITE_BASE || format('/{0}', github.event.repository.name) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Astro site
+        uses: withastro/action@v3
+        with:
+          # The Astro project lives in a subfolder; the repo root holds the
+          # original brand assets supplied by the client.
+          path: ./site
+          node-version: 24
+          package-manager: npm@latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

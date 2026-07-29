@@ -1,0 +1,115 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCTABar from '../components/MobileCTABar.astro';
+import { site } from '../data/site';
+import { href, absoluteUrl } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Extra JSON-LD to merge in, e.g. a Service or FAQPage graph. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** Set true on the home page so the H1 is not duplicated in the title. */
+  bareTitle?: boolean;
+  /** Keeps utility pages (thank-you, 404) out of the index. */
+  noindex?: boolean;
+}
+
+const { title, description, schema, bareTitle = false, noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const pageTitle = bareTitle ? title : `${title} | ${site.shortName}`;
+const ogImage = absoluteUrl('/images/logo.jpg', Astro.site);
+const homeUrl = absoluteUrl('/', Astro.site);
+
+// Core LocalBusiness graph. Google leans on this heavily for local results,
+// so the NAP here must match the Google Business Profile exactly.
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'GeneralContractor',
+  '@id': `${homeUrl}#business`,
+  name: site.name,
+  alternateName: site.shortName,
+  description: site.description,
+  url: homeUrl,
+  telephone: site.phone,
+  email: site.email,
+  image: ogImage,
+  logo: ogImage,
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.suburb,
+    addressRegion: site.address.state,
+    postalCode: site.address.postcode,
+    addressCountry: 'AU',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: site.address.lat,
+    longitude: site.address.lng,
+  },
+  openingHours: site.hoursSchema,
+  areaServed: site.serviceAreas.map((a) => ({
+    '@type': 'Place',
+    name: `${a}, QLD`,
+  })),
+};
+
+const graphs = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
+---
+
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <link rel="icon" type="image/svg+xml" href={href('/favicon.svg')} />
+    <meta name="theme-color" content="#f5921e" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap"
+    />
+
+    <link rel="sitemap" href={href('/sitemap-index.xml')} />
+
+    {
+      graphs.map((g) => (
+        <script type="application/ld+json" set:html={JSON.stringify(g)} is:inline />
+      ))
+    }
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-semibold focus:text-ink-950"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCTABar />
+  </body>
+</html>
