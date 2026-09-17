@@ -145,6 +145,11 @@ Claim and verify the listing, add photos, and start collecting reviews. The
 name, address and phone number **must match `src/data/site.ts` exactly** — Google
 cross-checks them.
 
+**Field-by-field setup pack:
+[`docs/google-business-profile.md`](../docs/google-business-profile.md)** — every
+value ready to paste, in the order Google asks for it. Must be completed by the
+owner: it needs a Google account and video or phone verification.
+
 ### Analytics
 Add Google Analytics 4 to `src/layouts/BaseLayout.astro`, and set a conversion
 goal on pageviews of `/thank-you` so quote submissions are counted.
