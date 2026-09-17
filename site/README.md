@@ -99,15 +99,31 @@ needed". Search the project for them:
 grep -rn "Placeholder\|PLACEHOLDER\|TODO" src/
 ```
 
-- **Photos** — 20–40 real project photos, ideally before/after pairs, tagged by
-  service. This is the single biggest trust factor on a trade website; stock
-  images of generic kitchens hurt more than they help.
+- **Photos** — ✅ mostly done. 21 real project photos are live, catalogued in
+  `src/data/projects.ts`. Four services still have no photography and are still
+  showing placeholders: **decking, patios, landscaping and painting**. An
+  owner/team photo is also still missing from the About page.
+- **Job locations** — the photos were supplied without suburbs, so none is
+  claimed. Add `suburb` to an entry in `src/data/projects.ts` once confirmed and
+  it renders automatically. Do not guess: these are real jobs.
 - **Testimonials** — three real reviews in `src/data/site.ts` (first name +
   suburb + service).
-- **Projects gallery** — replace the `projects` array in
-  `src/pages/projects.astro` with real jobs.
 - **About page story** — replace the draft "Who we are" copy with the owner's own
   words.
+
+#### Adding a photo
+
+1. Drop the file in `src/assets/projects/` with a descriptive kebab-case name.
+2. Add an entry to the `projects` array in `src/data/projects.ts` — set
+   `services` to the slugs it illustrates (a photo can serve more than one),
+   `stage`, and real `alt` text describing the work.
+3. That's it. It appears in the gallery, on each matching service page, and in
+   the filter buttons. Add `featured: true` to promote it to the home page.
+
+Images are resized and converted to WebP at build time, so upload the original
+full-resolution file — do not pre-compress it. Every photo is a portrait phone
+shot and crops with `object-cover`; if the subject is off-centre, set `focus`
+(a CSS `object-position`) on the entry.
 
 ### 4. Set the real domain
 Update `site` in `astro.config.mjs` and the `Sitemap:` line in

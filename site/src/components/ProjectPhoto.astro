@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  /** Aspect ratio helper class, e.g. 'aspect-[4/3]'. */
+  ratio?: string;
+  /** Show the caption below the photo. */
+  caption?: boolean;
+  /** Above-the-fold images should not lazy-load. */
+  eager?: boolean;
+  /** Responsive sizes hint so the browser picks the right width. */
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  project,
+  ratio = 'aspect-[4/3]',
+  caption = true,
+  eager = false,
+  sizes = '(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw',
+  class: className = '',
+} = Astro.props;
+
+// The supplied photos are all portrait phone shots, so every frame crops with
+// object-cover. Widths cover 1x and 2x for the container sizes we actually use.
+const widths = [400, 640, 900, 1200];
+---
+
+<figure class:list={['group', className]}>
+  <div class:list={['overflow-hidden rounded-lg bg-ink-100', ratio]}>
+    <Image
+      src={project.src}
+      alt={project.alt}
+      widths={widths}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'sync' : 'async'}
+      style={project.focus ? `object-position: ${project.focus}` : undefined}
+      class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+    />
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3">
+        <span class="font-display block text-ink-950">{project.title}</span>
+        <span class="text-sm text-ink-500">
+          {project.suburb ? `${project.suburb}, QLD` : null}
+          {project.suburb && ' · '}
+          {project.stage === 'progress' ? 'Work in progress' : 'Completed'}
+        </span>
+      </figcaption>
+    )
+  }
+</figure>
