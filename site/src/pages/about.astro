@@ -3,9 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Placeholder from '../components/Placeholder.astro';
 import CTABand from '../components/CTABand.astro';
 import Testimonials from '../components/Testimonials.astro';
+import ProjectPhoto from '../components/ProjectPhoto.astro';
 import { site } from '../data/site';
 import { services } from '../data/services';
+import { projects } from '../data/projects';
 import { href } from '../lib/url';
+
+// One in-progress shot and one finished shot, to show both halves of the job.
+const aboutPhotos = [
+  projects.find((p) => p.title === 'Structural timber framing'),
+  projects.find((p) => p.title === 'Frameless shower, large-format tiling'),
+].filter((p) => p !== undefined);
 ---
 
 <BaseLayout
@@ -103,13 +111,24 @@ import { href } from '../lib/url';
       </div>
 
       <div class="space-y-4">
+        {/* Still genuinely missing — there is no usable photo of the owner or
+            the team in the supplied set, and a real face builds more trust
+            than any amount of copy. */}
         <Placeholder
           label="The owner on site, or the team with the ute. A real face builds more trust than any amount of copy."
           ratio="aspect-[4/5]"
         />
         <div class="grid grid-cols-2 gap-4">
-          <Placeholder label="Work in progress" ratio="aspect-square" />
-          <Placeholder label="Finished job" ratio="aspect-square" />
+          {
+            aboutPhotos.map((p) => (
+              <ProjectPhoto
+                project={p}
+                ratio="aspect-square"
+                caption={false}
+                sizes="(min-width: 1024px) 260px, 50vw"
+              />
+            ))
+          }
         </div>
       </div>
     </div>

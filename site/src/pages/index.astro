@@ -4,10 +4,18 @@ import TrustBar from '../components/TrustBar.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import Testimonials from '../components/Testimonials.astro';
 import CTABand from '../components/CTABand.astro';
-import Placeholder from '../components/Placeholder.astro';
+import ProjectPhoto from '../components/ProjectPhoto.astro';
 import { site } from '../data/site';
 import { services } from '../data/services';
+import { featuredProjects, projects } from '../data/projects';
 import { href } from '../lib/url';
+
+// The finished kitchen is the strongest single image in the supplied set, so it
+// carries the hero. Swap the title here if a better hero shot turns up.
+const heroPhoto =
+  projects.find((p) => p.title === 'Kitchen renovation') ?? projects[0];
+
+const galleryPhotos = featuredProjects.filter((p) => p !== heroPhoto).slice(0, 6);
 
 const reasons = [
   {
@@ -90,9 +98,12 @@ const reasons = [
         </p>
       </div>
 
-      <Placeholder
-        label="Hero shot — the team on site, or a finished deck / renovation. Landscape, high resolution."
-        ratio="aspect-[4/3]"
+      <ProjectPhoto
+        project={heroPhoto}
+        ratio="aspect-[4/5]"
+        caption={false}
+        eager
+        sizes="(min-width: 1024px) 520px, 100vw"
         class="w-full"
       />
     </div>
@@ -167,16 +178,14 @@ const reasons = [
       >
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        [
-          'Deck build — Springwood',
-          'Bathroom renovation — Kingston',
-          'Colorbond fencing — Marsden',
-          'Kitchen renovation — Underwood',
-          'Retaining wall — Browns Plains',
-          'Patio build — Loganholme',
-        ].map((label) => <Placeholder label={label} />)
+        galleryPhotos.map((p) => (
+          <ProjectPhoto
+            project={p}
+            sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+          />
+        ))
       }
     </div>
   </section>
