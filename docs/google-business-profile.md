@@ -200,6 +200,9 @@ The single biggest ranking and conversion factor. Google generates a short revie
 link from the profile — send it to past customers by SMS or WhatsApp right after
 a job finishes, while they are still pleased with the work.
 
+**Ready-to-send messages, timing and the rules that keep the profile safe:
+[`review-requests.md`](review-requests.md).**
+
 These reviews also solve an open item on the website: the three testimonials in
 `site/src/data/site.ts` are still placeholders. Real Google reviews can be quoted
 there (first name + suburb + service).
